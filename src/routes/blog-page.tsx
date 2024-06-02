@@ -2,39 +2,70 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { useEffect,useState } from "react"
+import { useParams } from "react-router-dom"
+
 
 export default function Blog() {
+    const [blogData,setBlogData]=useState("");
+    const {id}=useParams();
+    let formattedDate=0;
+    if(blogData?.createdAt){
+        let date = new Date(blogData?.createdAt);
+
+
+date.setMonth(date.getMonth() + 1);
+let optionss = { year: 'numeric', month: 'long', day: '2-digit' };
+formattedDate = date.toLocaleDateString('en-GB', optionss);
+
+    }
+
+    useEffect(()=>{
+        getData();
+
+    },[]);
+    const getData=async()=>{
+        const data=await fetch(`http://localhost:3005/api/blogs/${id}`);
+        const dataResponse=await data.json();
+        console.log(dataResponse.data);
+        setBlogData(dataResponse.data)
+    }
     return (
         <div className="w-full max-w-4xl mx-auto py-12 px-4 md:px-6">
             <article className="prose prose-gray max-w-none dark:prose-invert">
                 <div className="space-y-4 not-prose">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-                        Taxing Laughter: The Joke Tax Chronicles
+                    {
+                        blogData?.title && <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+                       {
+                        blogData?.title
+                       }
                     </h1>
+                    }
                     <div className="flex items-center gap-4">
-                        <a href="#" className="flex items-center gap-2 text-sm font-medium" >
+                        {
+                            blogData?.name && <a href="#" className="flex items-center gap-2 text-sm font-medium" >
                             <Avatar className="w-8 h-8 border">
                                 <img src="/placeholder.svg" alt="@shadcn" />
                                 <AvatarFallback>AC</AvatarFallback>
                             </Avatar>
-                            Acme Inc
+                            {
+                                blogData?.name
+                            }
                         </a>
-                        <div className="text-gray-500 dark:text-gray-400 text-sm">Posted on August 24, 2023</div>
+                        }
+                       {
+                        formattedDate!==0 &&  <div className="text-gray-500 dark:text-gray-400 text-sm">Posted on {formattedDate}</div>
+                       }
                     </div>
                 </div>
-                <p>
-                    Once upon a time, in a far-off land, there was a very lazy king who spent all day lounging on his throne. One
-                    day, his advisors came to him with a problem: the kingdom was running out of money.
+                {
+                    blogData?.content && <p>
+                   {
+                    blogData?.content
+                   }
                 </p>
-                <p>
-                    Jokester began sneaking into the castle in the middle of the night and leaving jokes all over the place: under
-                    the king&apos;s pillow, in his soup, even in the royal toilet. The king was furious, but he couldn&apos;t seem
-                    to stop Jokester.
-                </p>
-                <p>
-                    And then, one day, the people of the kingdom discovered that the jokes left by Jokester were so funny that
-                    they couldn&apos;t help but laugh. And once they started laughing, they couldn&apos;t stop.
-                </p>
+                }
+               
                 <figure className="lg:-mx-12 xl:-mx-20">
                     <img
                         src="/placeholder.svg"
