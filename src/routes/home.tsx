@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import {Link, useNavigate} from "react-router-dom"
 import { redirect } from "react-router-dom";
 import Profile from "./profile-page"
+import BlogCard from "@/components/app/blog-card";
 export default function Home() {
   const navigate = useNavigate();
   return (
@@ -221,6 +222,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            <BlogCard/>
           </div>
         </div>
       </main>
